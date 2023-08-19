@@ -22,6 +22,27 @@ class MatrixView @JvmOverloads constructor(
         flags = Paint.ANTI_ALIAS_FLAG
     }
 
+    val pBlack = Paint().apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 3f
+        flags = Paint.ANTI_ALIAS_FLAG
+        color = Color.BLACK
+    }
+
+    val pGray = Paint().apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 3f
+        flags = Paint.ANTI_ALIAS_FLAG
+        color = Color.GRAY
+    }
+
+    val pWhite = Paint().apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 3f
+        flags = Paint.ANTI_ALIAS_FLAG
+        color = Color.WHITE
+    }
+
     private val path = Path()
     private val pathDst = Path()
     private val matrix1 = Matrix()
@@ -37,8 +58,155 @@ class MatrixView @JvmOverloads constructor(
         canvas.drawARGB(80, 102, 204, 255)
         path.reset()
 
-        rectToRectMatrix(canvas)
+        setPolyToPolyFourPints(canvas)
 
+    }
+
+    private fun setPolyToPolyFourPints(canvas: Canvas) {
+        val rectF = RectF(200f, 200f, 400f, 400f)
+        val src = floatArrayOf(200f, 200f, 400f, 400f, 400f, 200f, 200f, 400f)
+        val dst = floatArrayOf(100f, 600f, 500f, 1000f, 460f, 700f, 80f, 1100f)
+        val dst2 = floatArrayOf(800f, 400f, 1000f, 400f, 880f, 200f, 880f, 460f)
+        val points = 4
+
+        // зеленый квадрат
+        path.addRect(rectF, Path.Direction.CW)
+        p.color = Color.GREEN
+        canvas.drawPath(path, p)
+        canvas.drawLine(src[0], src[1], src[2], src[3], pBlack)
+        canvas.drawLine(src[0], src[1], src[4], src[5], pGray)
+        canvas.drawLine(src[0], src[1], src[6], src[7], pWhite)
+
+        // синий квадрат
+        // перобразование
+        matrix1.setPolyToPoly(src, 0, dst, 0, points)
+        path.transform(matrix1, pathDst)
+        p.color = Color.BLUE
+        canvas.drawPath(pathDst, p)
+        canvas.drawLine(dst[0], dst[1], dst[2], dst[3], pBlack)
+        canvas.drawLine(dst[0], dst[1], dst[4], dst[5], pGray)
+        canvas.drawLine(dst[0], dst[1], dst[6], dst[7], pWhite)
+
+        // красный квадрат
+        // перобразование
+        matrix1.setPolyToPoly(src, 0, dst2, 0, points)
+        path.transform(matrix1, pathDst)
+        p.color = Color.RED
+        canvas.drawPath(pathDst, p)
+        canvas.drawLine(dst2[0], dst2[1], dst2[2], dst2[3], pBlack)
+        canvas.drawLine(dst2[0], dst2[1], dst2[4], dst2[5], pGray)
+        canvas.drawLine(dst2[0], dst2[1], dst2[6], dst2[7], pWhite)
+    }
+
+    private fun setPolyToPolyThreePints(canvas: Canvas) {
+        val rectF = RectF(200f, 200f, 400f, 400f)
+        val src = floatArrayOf(200f, 200f, 400f, 400f, 400f, 200f)
+        val dst = floatArrayOf(100f, 600f, 500f, 1000f, 460f, 700f)
+        val dst2 = floatArrayOf(800f, 400f, 1000f, 400f, 880f, 200f)
+        val points = 3
+
+        // зеленый квадрат
+        path.addRect(rectF, Path.Direction.CW)
+        p.color = Color.GREEN
+        canvas.drawPath(path, p)
+        canvas.drawLine(src[0], src[1], src[2], src[3], pBlack)
+        canvas.drawLine(src[0], src[1], src[4], src[5], pGray)
+
+        // синий квадрат
+        // перобразование
+        matrix1.setPolyToPoly(src, 0, dst, 0, points)
+        path.transform(matrix1, pathDst)
+        p.color = Color.BLUE
+        canvas.drawPath(pathDst, p)
+        canvas.drawLine(dst[0], dst[1], dst[2], dst[3], pBlack)
+        canvas.drawLine(dst[0], dst[1], dst[4], dst[5], pGray)
+
+        // красный квадрат
+        // перобразование
+        matrix1.setPolyToPoly(src, 0, dst2, 0, points)
+        path.transform(matrix1, pathDst)
+        p.color = Color.RED
+        canvas.drawPath(pathDst, p)
+        canvas.drawLine(dst2[0], dst2[1], dst2[2], dst2[3], pBlack)
+        canvas.drawLine(dst2[0], dst2[1], dst2[4], dst2[5], pGray)
+    }
+
+    private fun setPolyToPolyTwoPints(canvas: Canvas) {
+        val rectF = RectF(200f, 200f, 400f, 400f)
+        val src = floatArrayOf(200f, 200f, 400f, 400f)
+        val dst = floatArrayOf(100f, 600f, 500f, 1000f)
+        val dst2 = floatArrayOf(800f, 400f, 1000f, 400f)
+        val points = 2
+
+        // зеленый квадрат
+        path.addRect(rectF, Path.Direction.CW)
+        p.color = Color.GREEN
+        canvas.drawPath(path, p)
+        canvas.drawLine(src[0], src[1], src[2], src[3], pBlack)
+
+        // синий квадрат
+        // перобразование
+        matrix1.setPolyToPoly(src, 0, dst, 0, points)
+        path.transform(matrix1, pathDst)
+        p.color = Color.BLUE
+        canvas.drawPath(pathDst, p)
+        canvas.drawLine(dst[0], dst[1], dst[2], dst[3], pBlack)
+
+        // красный квадрат
+        // перобразование
+        matrix1.setPolyToPoly(src, 0, dst2, 0, points)
+        path.transform(matrix1, pathDst)
+        p.color = Color.RED
+        canvas.drawPath(pathDst, p)
+        canvas.drawLine(dst2[0], dst2[1], dst2[2], dst2[3], pBlack)
+    }
+
+    private fun setPolyToPolyOnePints(canvas: Canvas) {
+        val rectF = RectF(200f, 200f, 400f, 400f)
+        val src = floatArrayOf(200f, 200f, 400f, 400f)
+        val dst = floatArrayOf(100f, 600f, 500f, 1000f)
+        val dst2 = floatArrayOf(800f, 400f, 1000f, 400f)
+        val points = 1
+
+        pBlack.color = Color.BLACK
+
+        // зеленый квадрат
+        path.addRect(rectF, Path.Direction.CW)
+        p.color = Color.GREEN
+        canvas.drawPath(path, p)
+        canvas.drawLine(src[0], src[1], src[2], src[3], pBlack)
+
+        // синий квадрат
+        // перобразование
+        matrix1.setPolyToPoly(src, 0, dst, 0, points)
+        path.transform(matrix1, pathDst)
+        p.color = Color.BLUE
+        canvas.drawPath(pathDst, p)
+        canvas.drawLine(dst[0], dst[1], dst[2], dst[3], pBlack)
+
+        // красный квадрат
+        // перобразование
+        matrix1.setPolyToPoly(src, 0, dst2, 0, points)
+        path.transform(matrix1, pathDst)
+        p.color = Color.RED
+        canvas.drawPath(pathDst, p)
+        canvas.drawLine(dst2[0], dst2[1], dst2[2], dst2[3], pBlack)
+    }
+
+    private fun setPolyToPoly1(canvas: Canvas) {
+        val rectF = RectF(200f, 200f, 400f, 400f)
+        val src = floatArrayOf(200f, 200f)
+        val dst = floatArrayOf(300f, 240f)
+
+        path.addRect(rectF, Path.Direction.CW)
+        p.color = Color.GREEN
+        canvas.drawPath(path, p)
+
+        matrix1.setPolyToPoly(src, 0, dst, 0, 1)
+        path.transform(matrix1, pathDst)
+
+        p.color = Color.BLUE
+        canvas.drawPath(pathDst, p)
     }
 
     private fun rectToRectMatrix(canvas: Canvas) {
